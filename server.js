@@ -90,7 +90,7 @@ eventEmmiter.on('productUpdated', (data) => {
 })
 
 eventEmmiter.on('createProduct', (data) => {
-  io.to(`product_${data.id}`).emit('createProduct', data);
+  io.to(`create-product_${data.id}`).emit('createProduct', data);
   console.log(data);
 })
 
