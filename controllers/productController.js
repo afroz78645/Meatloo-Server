@@ -91,6 +91,8 @@ const updateProduct = asyncHandler(async (req, res) => {
     product.discountPrice = discountPrice;
 
     const updatedProduct = await product.save()
+    const eventEmmiter = req.app.get('eventEmmiter')
+    eventEmmiter.emit('productUpdated',{id:req.params.id});
     res.json(updatedProduct)
   } else {
     res.status(404)
