@@ -54,8 +54,9 @@ const createProduct = asyncHandler(async (req, res) => {
     numReviews: 0,
     description: 'Sample description',
   })
-
   const createdProduct = await product.save()
+  const eventEmmiter = req.app.get('eventEmmiter')
+  eventEmmiter.emit('createProduct',{id:createProduct._id});
   res.status(201).json(createdProduct)
 })
 
