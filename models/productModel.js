@@ -83,6 +83,7 @@ const productSchema = mongoose.Schema(
     inStock: {
       type: Boolean,
       default: true,
+      required: true,
     },
   },
   {
