@@ -53,10 +53,10 @@ const createProduct = asyncHandler(async (req, res) => {
     countInStock: 0,
     numReviews: 0,
     description: 'Sample description',
+    inStock: true,
   })
+
   const createdProduct = await product.save()
-  const eventEmmiter = req.app.get('eventEmmiter')
-  eventEmmiter.emit('createProduct',{id:createProduct._id});
   res.status(201).json(createdProduct)
 })
 
@@ -75,6 +75,7 @@ const updateProduct = asyncHandler(async (req, res) => {
     netWeight,
     discountPrice,
     countInStock,
+    inStock,
   } = req.body
 
   const product = await Product.findById(req.params.id)
@@ -90,6 +91,7 @@ const updateProduct = asyncHandler(async (req, res) => {
     product.gross = gross;
     product.netWeight = netWeight;
     product.discountPrice = discountPrice;
+    product.inStock = inStock;
 
     const updatedProduct = await product.save()
     const eventEmmiter = req.app.get('eventEmmiter')

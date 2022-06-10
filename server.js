@@ -89,11 +89,6 @@ eventEmmiter.on('productUpdated', (data) => {
   console.log(data);
 })
 
-eventEmmiter.on('createProduct', (data) => {
-  io.to(`create-product_${data.id}`).emit('createProduct', data);
-  console.log(data);
-})
-
 
 httpServer.listen(
   PORT,
