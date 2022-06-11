@@ -4,10 +4,9 @@ import crypto from "crypto";
 import shortid from "shortid";
 
 const razorpay = new Razorpay({
-  key_id: "rzp_test_CgFAG3cg2brzrd",
-  key_secret: "msKktNhg888Ez8xEesuQeOu0",
+  key_id: "rzp_live_qeiJuG1vYrdu5i",
+  key_secret: "Ham3nRrNJCMPhX3XHHzh01n7",
 });
-
 const verify = asyncHandler(async (req, res) => {
   // do a validation
   const secret = "12345678";
