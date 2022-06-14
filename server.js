@@ -76,6 +76,10 @@ io.on('connection', (socket) => {
     console.log(orderId);
     socket.join(orderId);
   })
+  socket.on("productAdded",(data) => {
+    socket.broadcast.emit("productAddedRecieved",data);
+    console.log(data);
+  })
   console.log(socket.id);
 })
 
@@ -88,6 +92,7 @@ eventEmmiter.on('productUpdated', (data) => {
   io.to(`product_${data.id}`).emit('productUpdated', data);
   console.log(data);
 })
+
 
 
 httpServer.listen(
