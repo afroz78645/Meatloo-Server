@@ -14,7 +14,7 @@ import bodyParser from "body-parser";
 import fast2sms from "fast-two-sms";
 import { createServer } from "http";
 import { Server, Socket } from "socket.io";
-import Emmiter from 'events'
+import Emmiter from "events";
 dotenv.config();
 
 connectDB();
@@ -22,11 +22,10 @@ connectDB();
 const app = express();
 app.use(cors());
 
-
 app.use(bodyParser.json());
 
 const eventEmmiter = new Emmiter();
-app.set('eventEmmiter', eventEmmiter);
+app.set("eventEmmiter", eventEmmiter);
 app.use("/api/products", productRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/orders", orderRoutes);
@@ -37,12 +36,12 @@ app.get("/api/config/paypal", (req, res) =>
 );
 
 app.post("/api/sendSms", (req, res) => {
-  const {message} = req.body;
+  const { message } = req.body;
   fast2sms
     .sendMessage({
       authorization: process.env.FAST_2_SMS_KEY,
       message: message,
-      numbers: ["7972905284","7769087531"],
+      numbers: ["7972905284", "7769087531"],
     })
     .then((res) => console.log(res))
     .catch((err) => console.log(err));
@@ -51,49 +50,49 @@ app.post("/api/sendSms", (req, res) => {
 const __dirname = path.resolve();
 app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
 
-
 app.get("/", (req, res) => {
   res.send("Api is Running");
 });
-
 
 app.use(notFound);
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 
-const httpServer = createServer(app,);
+const httpServer = createServer(app);
 
 const io = new Server(httpServer, {
   cors: {
-    origin: ["https://meatloo.com","http://localhost:3000","http://192.168.1.207:3000"],
-    methods: ["GET", "POST","PUT","DELETE"]
-  }
+    origin: [
+      "https://meatloo.com",
+      "http://localhost:3000",
+      "http://192.168.1.207:3000",
+    ],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+  },
 });
 
-io.on('connection', (socket) => {
-  socket.on('join', (orderId) => {
+io.on("connection", (socket) => {
+  socket.on("join", (orderId) => {
     console.log(orderId);
     socket.join(orderId);
-  })
-  socket.on("productAdded",(data) => {
-    socket.broadcast.emit("productAddedRecieved",data);
-    console.log(data);
-  })
+  });
   console.log(socket.id);
-})
+});
 
-eventEmmiter.on('orderUpdated', (data) => {
-  io.to(`order_${data.id}`).emit('orderUpdated', data);
+eventEmmiter.on("productAdded", (data) => {
+  io.to(`productAdded_${data.product._id}`).emit("productAdded", data);
+});
+
+eventEmmiter.on("orderUpdated", (data) => {
+  io.to(`order_${data.id}`).emit("orderUpdated", data);
   console.log(data);
-})
+});
 
-eventEmmiter.on('productUpdated', (data) => {
-  io.to(`product_${data.id}`).emit('productUpdated', data);
+eventEmmiter.on("productUpdated", (data) => {
+  io.to(`product_${data.id}`).emit("productUpdated", data);
   console.log(data);
-})
-
-
+});
 
 httpServer.listen(
   PORT,
