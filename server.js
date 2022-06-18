@@ -82,6 +82,7 @@ io.on("connection", (socket) => {
 
 eventEmmiter.on("productAdded", (data) => {
   io.to(`productAdded_${data.product._id}`).emit("productAdded", data);
+  console.log(data);
 });
 
 eventEmmiter.on("orderUpdated", (data) => {
