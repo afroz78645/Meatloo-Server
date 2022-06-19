@@ -91,7 +91,7 @@ eventEmmiter.on("orderUpdated", (data) => {
 });
 
 eventEmmiter.on("productUpdated", (data) => {
-  io.to(`product_${data.id}`).emit("productUpdated", data);
+  io.to(`productBroadcast`).emit("productUpdated", data);
   console.log(data);
 });
 
