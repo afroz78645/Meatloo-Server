@@ -39,7 +39,6 @@ const addOrderItems = asyncHandler(async (req, res) => {
       mobileNumber,
     });
     const eventEmmiter = req.app.get("eventEmmiter");
-    res.json(updatedOrder);
     const createdOrder = await order.save();
     eventEmmiter.emit("ordered", {
       order: createdOrder,
