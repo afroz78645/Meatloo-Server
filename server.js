@@ -100,6 +100,11 @@ eventEmmiter.on("ordered", (data) => {
   console.log(data);
 });
 
+eventEmmiter.on("deletedProduct", (data) => {
+  io.to("broadcastDeleteProduct").emit("deletedProduct", data);
+  console.log(data);
+});
+
 httpServer.listen(
   PORT,
   console.log(
