@@ -95,6 +95,11 @@ eventEmmiter.on("productUpdated", (data) => {
   console.log(data);
 });
 
+eventEmmiter.on("ordered", (data) => {
+  io.emit("ordered", data);
+  console.log(data);
+});
+
 httpServer.listen(
   PORT,
   console.log(

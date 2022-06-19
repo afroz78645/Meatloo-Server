@@ -16,7 +16,7 @@ const addOrderItems = asyncHandler(async (req, res) => {
     mobileNumber,
     subQty,
     category,
-    netWeight
+    netWeight,
   } = req.body;
 
   if (orderItems && orderItems.length === 0) {
@@ -38,9 +38,13 @@ const addOrderItems = asyncHandler(async (req, res) => {
       category,
       mobileNumber,
     });
-
+    const eventEmmiter = req.app.get("eventEmmiter");
+    res.json(updatedOrder);
     const createdOrder = await order.save();
-  
+    eventEmmiter.emit("ordered", {
+      order: createdOrder,
+    });
+
     res.status(201).json(createdOrder);
   }
 });
@@ -88,32 +92,35 @@ const updateOrderToPaid = asyncHandler(async (req, res) => {
 });
 
 const deleteOrder = asyncHandler(async (req, res) => {
-  const order = await Order.findById(req.params.id)
+  const order = await Order.findById(req.params.id);
 
   if (order) {
-    await order.remove()
-    res.json({ message: 'Order removed' })
+    await order.remove();
+    res.json({ message: "Order removed" });
   } else {
-    res.status(404)
-    throw new Error('Order not found')
+    res.status(404);
+    throw new Error("Order not found");
   }
-})
+});
 
 // @desc    Update order to delivered
 // @route   GET /api/orders/:id/deliver
 // @access  Private/Admin
 const updateOrderToDelivered = asyncHandler(async (req, res) => {
-  const { orderStatus  } = req.body;
+  const { orderStatus } = req.body;
   console.log(req.body);
   const order = await Order.findById(req.params.id);
 
   if (order) {
     order.deliveryStatus = orderStatus;
-    order.deliveredAt = Date.now()
+    order.deliveredAt = Date.now();
     const updatedOrder = await order.save();
     console.log(updatedOrder);
-    const eventEmmiter = req.app.get('eventEmmiter')
-    eventEmmiter.emit('orderUpdated',{id:req.params.id,status:orderStatus});
+    const eventEmmiter = req.app.get("eventEmmiter");
+    eventEmmiter.emit("orderUpdated", {
+      id: req.params.id,
+      status: orderStatus,
+    });
     res.json(updatedOrder);
   } else {
     res.status(404);
@@ -122,17 +129,20 @@ const updateOrderToDelivered = asyncHandler(async (req, res) => {
 });
 
 const updateOrderToCancel = asyncHandler(async (req, res) => {
-  const { orderStatus  } = req.body;
+  const { orderStatus } = req.body;
   console.log(req.body);
   const order = await Order.findById(req.params.id);
 
   if (order) {
     order.deliveryStatus = orderStatus;
-    order.deliveredAt = Date.now()
+    order.deliveredAt = Date.now();
     const updatedOrder = await order.save();
     console.log(updatedOrder);
-    const eventEmmiter = req.app.get('eventEmmiter')
-    eventEmmiter.emit('orderUpdated',{id:req.params.id,status:orderStatus});
+    const eventEmmiter = req.app.get("eventEmmiter");
+    eventEmmiter.emit("orderUpdated", {
+      id: req.params.id,
+      status: orderStatus,
+    });
     res.json(updatedOrder);
   } else {
     res.status(404);
@@ -164,5 +174,5 @@ export {
   getMyOrders,
   getOrders,
   deleteOrder,
-  updateOrderToCancel
+  updateOrderToCancel,
 };
