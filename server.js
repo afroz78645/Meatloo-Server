@@ -81,7 +81,7 @@ io.on("connection", (socket) => {
 });
 
 eventEmmiter.on("productAdded", (data) => {
-  io.to(`productAdded_${data.product._id}`).emit("productAdded", data);
+  io.to(`productBroadcast`).emit("productAdded", data);
   console.log(data);
 });
 
@@ -91,7 +91,7 @@ eventEmmiter.on("orderUpdated", (data) => {
 });
 
 eventEmmiter.on("productUpdated", (data) => {
-  io.to(`productBroadcast`).emit("productUpdated", data);
+  io.to(`product_${data.id}`).emit("productUpdated", data);
   console.log(data);
 });
 
