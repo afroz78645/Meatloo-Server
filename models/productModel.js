@@ -57,7 +57,7 @@ const productSchema = mongoose.Schema(
     },
     countInStock: {
       type: Number,
-      required: true,
+      required: false,
       default: 0,
     },
     gross: {
@@ -84,6 +84,11 @@ const productSchema = mongoose.Schema(
       type: Boolean,
       default: true,
       required: true,
+    },
+    quality: {
+      type: String,
+      default: true,
+      required: false,
     },
   },
   {
