@@ -15,6 +15,7 @@ import fast2sms from "fast-two-sms";
 import { createServer } from "http";
 import { Server, Socket } from "socket.io";
 import Emmiter from "events";
+import Shop from "./models/shopModel.js";
 dotenv.config();
 
 connectDB();
@@ -50,12 +51,32 @@ app.post("/api/sendSms", (req, res) => {
 const __dirname = path.resolve();
 app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
 
+app.get("/api/getShopStatus", (req, res) => {
+  Shop.find({}, (err, result) => {
+    if (err) {
+      res.json(err);
+    } else {
+      res.json(result);
+    }
+  });
+});
+
+app.post("/api/setShopStatus", async (req, res) => {
+  const shopStaus = req.body;
+  const newStaus = new Shop(shopStaus);
+  await newStaus.save();
+
+  res.json(newStaus);
+});
+
 app.get("/", (req, res) => {
   res.send("Api is Running");
 });
 
 app.use(notFound);
 app.use(errorHandler);
+
+
 
 const PORT = process.env.PORT || 5000;
 
