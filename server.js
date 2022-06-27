@@ -52,7 +52,7 @@ const __dirname = path.resolve();
 app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
 
 app.get("/api/getShopStatus", (req, res) => {
-  Shop.find({}, (err, result) => {
+  Shop.findById("62b85dcd9b010b18945b99c5", (err, result) => {
     if (err) {
       res.json(err);
     } else {
@@ -69,14 +69,27 @@ app.post("/api/setShopStatus", async (req, res) => {
   res.json(newStaus);
 });
 
+app.put("/api/editShopStatus", async (req, res) => {
+  const shop = await Shop.findById("62b85dcd9b010b18945b99c5");
+  const { isOpen } = req.body;
+
+  if (shop) {
+    shop.isOpen = isOpen;
+    const updatedShop = await shop.save();
+    res.json(updatedShop);
+  } else {
+    res.status(404);
+    throw new Error("Error Something Went Wrong");
+  }
+
+});
+
 app.get("/", (req, res) => {
   res.send("Api is Running");
 });
 
 app.use(notFound);
 app.use(errorHandler);
-
-
 
 const PORT = process.env.PORT || 5000;
 
