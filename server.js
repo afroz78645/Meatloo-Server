@@ -77,6 +77,8 @@ app.put("/api/editShopStatus", async (req, res) => {
     shop.isOpen = isOpen;
     const updatedShop = await shop.save();
     res.json(updatedShop);
+    const eventEmmiter = req.app.get("eventEmmiter");
+    eventEmmiter.emit("shopUpdated", { data:updatedShop });
   } else {
     res.status(404);
     throw new Error("Error Something Went Wrong");
@@ -131,6 +133,11 @@ eventEmmiter.on("productUpdated", (data) => {
 
 eventEmmiter.on("ordered", (data) => {
   io.to("broadcast").emit("ordered", data);
+  console.log(data);
+});
+
+eventEmmiter.on("shopUpdated", (data) => {
+  io.to("broadcastShop").emit("shopUpdated", data);
   console.log(data);
 });
 
