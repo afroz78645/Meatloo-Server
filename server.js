@@ -15,6 +15,7 @@ import fast2sms from "fast-two-sms";
 import { createServer } from "http";
 import { Server, Socket } from "socket.io";
 import Emmiter from "events";
+import Shop from "./models/shopModel.js";
 dotenv.config();
 
 connectDB();
@@ -49,6 +50,41 @@ app.post("/api/sendSms", (req, res) => {
 
 const __dirname = path.resolve();
 app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
+
+app.get("/api/getShopStatus", (req, res) => {
+  Shop.findById("62b85dcd9b010b18945b99c5", (err, result) => {
+    if (err) {
+      res.json(err);
+    } else {
+      res.json(result);
+    }
+  });
+});
+
+app.post("/api/setShopStatus", async (req, res) => {
+  const shopStaus = req.body;
+  const newStaus = new Shop(shopStaus);
+  await newStaus.save();
+
+  res.json(newStaus);
+});
+
+app.put("/api/editShopStatus", async (req, res) => {
+  const shop = await Shop.findById("62b85dcd9b010b18945b99c5");
+  const { isOpen } = req.body;
+
+  if (shop) {
+    shop.isOpen = isOpen;
+    const updatedShop = await shop.save();
+    res.json(updatedShop);
+    const eventEmmiter = req.app.get("eventEmmiter");
+    eventEmmiter.emit("shopUpdated", { data:updatedShop });
+  } else {
+    res.status(404);
+    throw new Error("Error Something Went Wrong");
+  }
+
+});
 
 app.get("/", (req, res) => {
   res.send("Api is Running");
@@ -97,6 +133,11 @@ eventEmmiter.on("productUpdated", (data) => {
 
 eventEmmiter.on("ordered", (data) => {
   io.to("broadcast").emit("ordered", data);
+  console.log(data);
+});
+
+eventEmmiter.on("shopUpdated", (data) => {
+  io.to("broadcastShop").emit("shopUpdated", data);
   console.log(data);
 });
 
