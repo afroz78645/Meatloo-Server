@@ -65,25 +65,24 @@ app.post("/api/setShopStatus", async (req, res) => {
   const shopStaus = req.body;
   const newStaus = new Shop(shopStaus);
   await newStaus.save();
-
+  const eventEmmiter = req.app.get("eventEmmiter");
+  eventEmmiter.emit("shopUpdated", { data: newStaus });
   res.json(newStaus);
 });
 
 app.put("/api/editShopStatus", async (req, res) => {
   const shop = await Shop.findById("62b85dcd9b010b18945b99c5");
   const { isOpen } = req.body;
-
-  if (shop) {
+  if (shop) { 
     shop.isOpen = isOpen;
     const updatedShop = await shop.save();
     res.json(updatedShop);
     const eventEmmiter = req.app.get("eventEmmiter");
-    eventEmmiter.emit("shopUpdated", { data:updatedShop });
+    eventEmmiter.emit("shopUpdated", { data: updatedShop });
   } else {
     res.status(404);
     throw new Error("Error Something Went Wrong");
   }
-
 });
 
 app.get("/", (req, res) => {
@@ -138,7 +137,7 @@ eventEmmiter.on("ordered", (data) => {
 
 eventEmmiter.on("shopUpdated", (data) => {
   io.to("broadcastShop").emit("shopUpdated", data);
-  console.log(data);
+  console.log("Shop Status Updated");
 });
 
 eventEmmiter.on("deletedProduct", (data) => {
