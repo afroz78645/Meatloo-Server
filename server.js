@@ -36,17 +36,6 @@ app.get("/api/config/paypal", (req, res) =>
   res.send(process.env.PAYPAL_CLIENT_ID)
 );
 
-app.post("/api/sendSms", (req, res) => {
-  const { message } = req.body;
-  fast2sms
-    .sendMessage({
-      authorization: process.env.FAST_2_SMS_KEY,
-      message: message,
-      numbers: ["7972905284", "7769087531"],
-    })
-    .then((res) => console.log(res))
-    .catch((err) => console.log(err));
-});
 
 const __dirname = path.resolve();
 app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
