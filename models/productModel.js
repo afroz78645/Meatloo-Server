@@ -81,7 +81,7 @@ const productSchema = mongoose.Schema(
     },
     isBestSeller: {
       type: Boolean,
-      required: false,
+      required: true,
       default: false,
     },
     inStock: {
