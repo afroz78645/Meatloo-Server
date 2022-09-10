@@ -57,6 +57,7 @@ const createProduct = asyncHandler(async (req, res) => {
     numReviews: 0,
     description: "Sample description",
     inStock: true,
+    isBestSeller:false
   });
   const eventEmmiter = req.app.get("eventEmmiter");
   const createdProduct = await product.save();
@@ -81,6 +82,7 @@ const updateProduct = asyncHandler(async (req, res) => {
     discountPrice,
     countInStock,
     inStock,
+    isBestSeller
   } = req.body;
 
   const product = await Product.findById(req.params.id);
@@ -98,6 +100,7 @@ const updateProduct = asyncHandler(async (req, res) => {
     product.netWeight = netWeight;
     product.discountPrice = discountPrice;
     product.inStock = inStock;
+    product.isBestSeller = isBestSeller;
 
     const updatedProduct = await product.save();
     const eventEmmiter = req.app.get("eventEmmiter");
