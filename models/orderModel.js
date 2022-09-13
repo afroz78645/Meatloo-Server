@@ -70,6 +70,11 @@ const orderSchema = mongoose.Schema(
       required: true,
       default: "pending",
     },
+    isCancelled: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
     deliveredAt: {
       type: Date,
     },

@@ -37,6 +37,7 @@ const addOrderItems = asyncHandler(async (req, res) => {
       subQty,
       category,
       mobileNumber,
+      isCancelled:false
     });
     const eventEmmiter = req.app.get("eventEmmiter");
     const createdOrder = await order.save();
@@ -133,8 +134,8 @@ const updateOrderToCancel = asyncHandler(async (req, res) => {
   const order = await Order.findById(req.params.id);
 
   if (order) {
-    order.deliveryStatus = orderStatus;
     order.deliveredAt = Date.now();
+    order.isCancelled = true;
     const updatedOrder = await order.save();
     console.log(updatedOrder);
     const eventEmmiter = req.app.get("eventEmmiter");
