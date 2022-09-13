@@ -104,6 +104,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
   if (user) {
     user.name = req.body.name || user.name;
     user.number = req.body.number || user.number;
+    user.email = req.body.email || user.email;
     
 
     const updatedUser = await user.save();
@@ -112,6 +113,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
       _id: updatedUser._id,
       name: updatedUser.name,
       number: updatedUser.number,
+      email:updateUser.email,
       isAdmin: updatedUser.isAdmin,
       token: generateToken(updatedUser._id),
     });
