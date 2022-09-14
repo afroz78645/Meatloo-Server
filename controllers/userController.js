@@ -38,6 +38,7 @@ const authUser = asyncHandler(async (req, res) => {
          name: data.name,
          number: data.number,
          isAdmin: data.isAdmin,
+         email:data.email,
          token: generateToken(data._id),
        });
      }
