@@ -114,6 +114,7 @@ const updateOrderToDelivered = asyncHandler(async (req, res) => {
   if (order) {
     order.deliveryStatus = orderStatus;
     order.deliveredAt = Date.now();
+    order.isCancelled = false;
     const updatedOrder = await order.save();
     console.log(updatedOrder);
     const eventEmmiter = req.app.get("eventEmmiter");
