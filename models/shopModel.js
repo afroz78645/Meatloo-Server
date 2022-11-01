@@ -6,6 +6,10 @@ const shopSchema = mongoose.Schema(
             type: Boolean,
             required: true,
             default: true,
+        },
+        opening:{
+            type:Boolean,
+            default:false
         }
     }
 )

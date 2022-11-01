@@ -74,6 +74,21 @@ app.put("/api/editShopStatus", async (req, res) => {
   }
 });
 
+app.put("/api/editopeningStatus", async (req, res) => {
+  const shop = await Shop.findById("62b85dcd9b010b18945b99c5");
+  const { opening } = req.body;
+  if (shop) { 
+    shop.opening = opening;
+    const updatedShop = await shop.save();
+    res.json(updatedShop);
+    const eventEmmiter = req.app.get("eventEmmiter");
+    eventEmmiter.emit("shopUpdated", { data: updatedShop });
+  } else {
+    res.status(404);
+    throw new Error("Error Something Went Wrong");
+  }
+});
+
 app.get("/", (req, res) => {
   res.send("Api is Running");
 });
